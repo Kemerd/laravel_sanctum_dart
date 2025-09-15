@@ -1,0 +1,106 @@
+# Flutter and Dart
+
+# Files and directories created by pub
+.dart_tool/
+.packages
+pubspec.lock
+build/
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.config.dart
+
+# Coverage
+coverage/
+*.lcov
+
+# Android-specific
+android/
+!android/app/src/main/AndroidManifest.xml
+!android/app/src/debug/AndroidManifest.xml
+!android/app/src/profile/AndroidManifest.xml
+
+# iOS-specific
+ios/
+!ios/Runner/
+!ios/Runner.xcodeproj/
+!ios/Runner.xcodeproj/project.pbxproj
+!ios/Runner/Assets.xcassets/
+!ios/Runner/Info.plist
+
+# Web-specific
+web/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Local configuration files
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+test/coverage/
+coverage/
+
+# Documentation build files
+doc/api/
+
+# Example app build files
+example/build/
+example/.dart_tool/
+example/.packages
+example/pubspec.lock
+example/android/
+example/ios/
+example/web/
+example/linux/
+example/macos/
+example/windows/
+
+# Temporary files
+tmp/
+temp/
+
+# Log files
+*.log
+
+# Backup files
+*.bak
+*.backup
+
+# Archive files
+*.tar.gz
+*.zip
+
+# Flutter/Dart specific generated files
+.metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Analysis server cache
+.dart_tool/analyzer/
+
+# Build output
+build/
+
+# Generated protobuf files
+*.pb.dart
+*.pbenum.dart
+*.pbjson.dart
+
+# Firebase configuration (if using Firebase)
+**/firebase_options.dart
+
+# Sensitive files
+.secrets.dart
+secrets.json

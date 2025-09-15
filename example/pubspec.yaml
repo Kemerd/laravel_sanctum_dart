@@ -1,0 +1,43 @@
+name: sanctum_example
+description: Example Flutter app demonstrating Laravel Sanctum Dart package features.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Laravel Sanctum Dart package
+  laravel_sanctum_dart:
+    path: ../
+
+  # UI and state management
+  cupertino_icons: ^1.0.6
+  provider: ^6.1.1
+
+  # HTTP and networking
+  dio: ^5.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Bold.ttf
+          weight: 700
