@@ -197,6 +197,9 @@ class SanctumEndpoints {
   /// Token listing endpoint
   final String listTokens;
 
+  /// Token refresh endpoint
+  final String refreshToken;
+
   /// Creates a new [SanctumEndpoints] instance with default values
   const SanctumEndpoints({
     this.login = SanctumConstants.defaultLoginEndpoint,
@@ -207,6 +210,7 @@ class SanctumEndpoints {
     this.csrfCookie = SanctumConstants.defaultCsrfCookieEndpoint,
     this.revokeTokens = SanctumConstants.defaultRevokeTokensEndpoint,
     this.listTokens = SanctumConstants.defaultTokensListEndpoint,
+    this.refreshToken = SanctumConstants.defaultRefreshTokenEndpoint,
   });
 
   @override
@@ -221,7 +225,8 @@ class SanctumEndpoints {
           createToken == other.createToken &&
           csrfCookie == other.csrfCookie &&
           revokeTokens == other.revokeTokens &&
-          listTokens == other.listTokens;
+          listTokens == other.listTokens &&
+          refreshToken == other.refreshToken;
 
   @override
   int get hashCode => Object.hash(
@@ -233,6 +238,7 @@ class SanctumEndpoints {
         csrfCookie,
         revokeTokens,
         listTokens,
+        refreshToken,
       );
 }
 

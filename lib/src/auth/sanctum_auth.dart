@@ -115,7 +115,9 @@ class SanctumAuth {
     _validateConfig();
     _initializeComponents(storage, logger, performance);
     _setupDio();
-    _initialize();
+    // Initialize asynchronously to avoid blocking the constructor
+    // Use scheduleMicrotask to avoid blocking the constructor
+    scheduleMicrotask(() => _initialize());
   }
 
   /// Creates a [SanctumAuth] instance with custom configuration
@@ -128,7 +130,8 @@ class SanctumAuth {
     _validateConfig();
     _initializeComponents(storage, logger, performance);
     _setupDio();
-    _initialize();
+    // Initialize asynchronously to avoid blocking the constructor
+    scheduleMicrotask(() => _initialize());
   }
 
   /// Stream of authentication state changes
@@ -189,18 +192,7 @@ class SanctumAuth {
     _storage = storage ?? SanctumStorage(logger: _logger);
     _performance = performance ?? SanctumPerformance(logger: _logger);
 
-    _tokenManager = SanctumTokenManager(
-      dio: _dio,
-      config: config,
-      storage: _storage,
-      logger: _logger,
-    );
-
-    _cookieManager = SanctumCookieManager(
-      dio: _dio,
-      config: config,
-      logger: _logger,
-    );
+    // Note: _tokenManager and _cookieManager will be initialized after _dio is set up
   }
 
   /// Sets up the Dio HTTP client with interceptors
@@ -217,6 +209,20 @@ class SanctumAuth {
         ...config.defaultHeaders,
       },
     ));
+
+    // Initialize managers now that Dio is available
+    _tokenManager = SanctumTokenManager(
+      dio: _dio,
+      config: config,
+      storage: _storage,
+      logger: _logger,
+    );
+
+    _cookieManager = SanctumCookieManager(
+      dio: _dio,
+      config: config,
+      logger: _logger,
+    );
 
     // Add interceptors in the correct order
     _dio.interceptors.addAll([
@@ -603,7 +609,7 @@ class SanctumAuth {
         }
 
         final response = await _dio.post(
-          '/api/refresh',
+          config.endpoints.refreshToken,
           data: {'refresh_token': refreshToken},
         );
 

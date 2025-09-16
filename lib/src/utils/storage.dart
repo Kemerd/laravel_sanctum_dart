@@ -27,12 +27,12 @@ class SanctumStorage {
   final String _keyPrefix;
 
   /// Creates a new [SanctumStorage] instance
-  const SanctumStorage({
+  SanctumStorage({
     FlutterSecureStorage? storage,
     SanctumLogger? logger,
     String keyPrefix = 'sanctum_',
   })  : _storage = storage ?? const FlutterSecureStorage(),
-        _logger = logger ?? const SanctumLogger(),
+        _logger = logger ?? SanctumLogger(),
         _keyPrefix = keyPrefix;
 
   /// Creates a storage instance with custom options
@@ -78,14 +78,10 @@ class SanctumStorage {
   );
 
   /// Default Linux options for secure storage
-  static const LinuxOptions _defaultLinuxOptions = LinuxOptions(
-    encryptedSharedPreferences: true,
-  );
+  static const LinuxOptions _defaultLinuxOptions = LinuxOptions();
 
   /// Default Windows options for secure storage
-  static const WindowsOptions _defaultWindowsOptions = WindowsOptions(
-    encryptedSharedPreferences: true,
-  );
+  static const WindowsOptions _defaultWindowsOptions = WindowsOptions();
 
   /// Default web options for secure storage
   static const WebOptions _defaultWebOptions = WebOptions(
@@ -280,7 +276,8 @@ class SanctumStorage {
     if (json == null) return null;
 
     try {
-      final abilities = List<String>.from(json['abilities'] ?? []);
+      final abilitiesList = json['abilities'] as List<dynamic>? ?? [];
+      final abilities = List<String>.from(abilitiesList);
       return abilities;
     } catch (e, stackTrace) {
       _logger.error('Failed to retrieve token abilities', e, stackTrace);

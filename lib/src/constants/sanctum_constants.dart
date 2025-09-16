@@ -12,6 +12,7 @@ class SanctumConstants {
   static const String defaultCsrfCookieEndpoint = '/sanctum/csrf-cookie';
   static const String defaultRevokeTokensEndpoint = '/api/tokens/revoke';
   static const String defaultTokensListEndpoint = '/api/tokens';
+  static const String defaultRefreshTokenEndpoint = '/api/refresh';
 
   /// HTTP headers used in authentication requests
   static const String authorizationHeader = 'Authorization';
