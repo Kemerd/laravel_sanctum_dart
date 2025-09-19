@@ -392,21 +392,21 @@ class SanctumApiResponse<T> {
     T Function(Object? json) fromJsonT,
   ) {
     return SanctumApiResponse<T>(
-      success: json['success'] ?? false,
+      success: json['success'] as bool? ?? false,
       data: json['data'] != null ? fromJsonT(json['data']) : null,
-      message: json['message'],
-      statusCode: json['status_code'],
+      message: json['message'] as String?,
+      statusCode: json['status_code'] as int?,
       errors: json['errors'] != null
           ? Map<String, List<String>>.from(
-              json['errors'].map(
+              (json['errors'] as Map).map(
                 (key, value) => MapEntry(
-                  key,
-                  List<String>.from(value),
+                  key as String,
+                  List<String>.from(value is List ? value : [value]),
                 ),
               ),
             )
           : null,
-      meta: json['meta'],
+      meta: json['meta'] as Map<String, dynamic>?,
     );
   }
 

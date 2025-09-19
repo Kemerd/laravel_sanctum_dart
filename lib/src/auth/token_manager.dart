@@ -117,7 +117,7 @@ class SanctumTokenManager {
 
       final response = await _dio.get(_config.endpoints.listTokens);
 
-      final List<dynamic> tokensData = response.data['tokens'] ?? response.data;
+      final tokensData = (response.data['tokens'] ?? response.data) as List;
       final tokens = tokensData
           .map((tokenData) => SanctumToken.fromJson(tokenData as Map<String, dynamic>))
           .toList();
@@ -422,7 +422,9 @@ class SanctumTokenManager {
         final errors = <String, List<String>>{};
         final errorData = data!['errors'] as Map<String, dynamic>;
         for (final entry in errorData.entries) {
-          errors[entry.key] = List<String>.from(entry.value);
+          errors[entry.key] = List<String>.from(
+            entry.value is List ? entry.value as List : [entry.value],
+          );
         }
         return SanctumValidationException.fromResponse(errors: errors);
       }

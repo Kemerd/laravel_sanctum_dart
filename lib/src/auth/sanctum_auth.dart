@@ -775,7 +775,9 @@ class SanctumAuth {
             if (data['errors'] != null) {
               final errorData = data['errors'] as Map<String, dynamic>;
               for (final entry in errorData.entries) {
-                errors[entry.key] = List<String>.from(entry.value);
+                errors[entry.key] = List<String>.from(
+                  entry.value is List ? entry.value as List : [entry.value],
+                );
               }
             }
             return SanctumValidationException.fromResponse(errors: errors);
