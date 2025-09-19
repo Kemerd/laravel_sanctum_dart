@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dart run build_runner build:*)"
+      "Bash(dart run build_runner build:*)",
+      "Bash(flutter pub add:*)"
     ],
     "deny": [],
     "ask": []
