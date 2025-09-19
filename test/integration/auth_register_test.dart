@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laravel_sanctum_dart/laravel_sanctum_dart.dart';
 
@@ -23,6 +24,12 @@ import '../helpers/test_config.dart';
 ///   "device_name": "string"
 /// }
 void main() {
+  // Initialize Flutter bindings for tests but allow real HTTP
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  // Override HTTP client to allow real network requests
+  HttpOverrides.global = null;
+
   group('Laravel Sanctum User Registration Integration Tests', () {
     late SanctumAuth sanctumAuth;
 

@@ -96,6 +96,8 @@ class SanctumAuth {
     Map<String, String> defaultHeaders = const {},
     bool autoRefreshTokens = true,
     List<String> statefulDomains = const [],
+    Map<String, dynamic> Function(String, String, String, List<String>?, bool)? loginRequestTransformer,
+    Map<String, dynamic> Function(String, String, String, String, String, List<String>?, Map<String, dynamic>)? registerRequestTransformer,
     SanctumStorage? storage,
     SanctumLogger? logger,
     SanctumPerformance? performance,
@@ -111,6 +113,8 @@ class SanctumAuth {
           defaultHeaders: defaultHeaders,
           autoRefreshTokens: autoRefreshTokens,
           statefulDomains: statefulDomains,
+          loginRequestTransformer: loginRequestTransformer,
+          registerRequestTransformer: registerRequestTransformer,
         ) {
     _validateConfig();
     _initializeComponents(storage, logger, performance);
@@ -382,15 +386,29 @@ class SanctumAuth {
           await _cookieManager.getCsrfCookie();
         }
 
+        // Use custom request transformer if provided, otherwise use default format
+        final requestData = config.loginRequestTransformer?.call(
+          email,
+          password,
+          deviceName,
+          abilities,
+          remember,
+        ) ?? {
+          'email': email,
+          'password': password,
+          'device_name': deviceName,
+          if (abilities.isNotEmpty) 'abilities': abilities,
+          if (remember) 'remember': true,
+        };
+
+        // Debug logging for development
+        if (config.debugMode) {
+          _logger.debug('Login request data: $requestData');
+        }
+
         final response = await _dio.post(
           config.endpoints.login,
-          data: {
-            'email': email,
-            'password': password,
-            'device_name': deviceName,
-            if (abilities.isNotEmpty) 'abilities': abilities,
-            if (remember) 'remember': true,
-          },
+          data: requestData,
         );
 
         final loginResponse = SanctumLoginResponse.fromJson(
@@ -456,17 +474,28 @@ class SanctumAuth {
           await _cookieManager.getCsrfCookie();
         }
 
+        // Use custom request transformer if provided, otherwise use default format
+        final requestData = config.registerRequestTransformer?.call(
+          name,
+          email,
+          password,
+          passwordConfirmation,
+          deviceName,
+          abilities,
+          additionalFields,
+        ) ?? {
+          'name': name,
+          'email': email,
+          'password': password,
+          'password_confirmation': passwordConfirmation,
+          'device_name': deviceName,
+          if (abilities.isNotEmpty) 'abilities': abilities,
+          ...additionalFields,
+        };
+
         final response = await _dio.post(
           config.endpoints.register,
-          data: {
-            'name': name,
-            'email': email,
-            'password': password,
-            'password_confirmation': passwordConfirmation,
-            'device_name': deviceName,
-            if (abilities.isNotEmpty) 'abilities': abilities,
-            ...additionalFields,
-          },
+          data: requestData,
         );
 
         final registerResponse = SanctumRegisterResponse.fromJson(
@@ -723,7 +752,7 @@ class SanctumAuth {
       case DioExceptionType.sendTimeout:
         return SanctumNetworkException.timeout(
           timeout: Duration(
-            milliseconds: error.requestOptions.connectTimeout ?? 30000,
+            milliseconds: (error.requestOptions.connectTimeout as int?) ?? 30000,
           ),
         );
 

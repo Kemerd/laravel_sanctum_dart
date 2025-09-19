@@ -62,6 +62,52 @@ class SanctumConfig {
   /// Only used when [authMode] is [SanctumAuthMode.spa] or [SanctumAuthMode.hybrid].
   final List<String> statefulDomains;
 
+  /// Custom request transformer for login requests
+  ///
+  /// Allows you to customize the request payload before it's sent to the API.
+  /// Useful for APIs that have different field names or additional requirements.
+  ///
+  /// Example:
+  /// ```dart
+  /// loginRequestTransformer: (email, password, deviceName, abilities, remember) => {
+  ///   'email': email,
+  ///   'password': password,
+  ///   'name': deviceName, // Use 'name' instead of 'device_name'
+  ///   'abilities': abilities?.join(','), // Convert list to comma-separated string
+  /// }
+  /// ```
+  final Map<String, dynamic> Function(
+    String email,
+    String password,
+    String deviceName,
+    List<String>? abilities,
+    bool remember,
+  )? loginRequestTransformer;
+
+  /// Custom request transformer for registration requests
+  ///
+  /// Allows you to customize the registration request payload.
+  ///
+  /// Example:
+  /// ```dart
+  /// registerRequestTransformer: (name, email, password, passwordConfirmation, deviceName, abilities, additionalFields) => {
+  ///   'name': name,
+  ///   'email': email,
+  ///   'password': password,
+  ///   'type': additionalFields['type'] ?? 'customer',
+  ///   // Skip password_confirmation and device_name for this API
+  /// }
+  /// ```
+  final Map<String, dynamic> Function(
+    String name,
+    String email,
+    String password,
+    String passwordConfirmation,
+    String deviceName,
+    List<String>? abilities,
+    Map<String, dynamic> additionalFields,
+  )? registerRequestTransformer;
+
   /// Creates a new [SanctumConfig] instance
   const SanctumConfig({
     required this.baseUrl,
@@ -75,6 +121,8 @@ class SanctumConfig {
     this.defaultHeaders = const {},
     this.autoRefreshTokens = true,
     this.statefulDomains = const [],
+    this.loginRequestTransformer,
+    this.registerRequestTransformer,
   });
 
   /// Creates a copy of this config with the given fields replaced
@@ -90,6 +138,8 @@ class SanctumConfig {
     Map<String, String>? defaultHeaders,
     bool? autoRefreshTokens,
     List<String>? statefulDomains,
+    Map<String, dynamic> Function(String, String, String, List<String>?, bool)? loginRequestTransformer,
+    Map<String, dynamic> Function(String, String, String, String, String, List<String>?, Map<String, dynamic>)? registerRequestTransformer,
   }) {
     return SanctumConfig(
       baseUrl: baseUrl ?? this.baseUrl,
@@ -103,6 +153,8 @@ class SanctumConfig {
       defaultHeaders: defaultHeaders ?? this.defaultHeaders,
       autoRefreshTokens: autoRefreshTokens ?? this.autoRefreshTokens,
       statefulDomains: statefulDomains ?? this.statefulDomains,
+      loginRequestTransformer: loginRequestTransformer ?? this.loginRequestTransformer,
+      registerRequestTransformer: registerRequestTransformer ?? this.registerRequestTransformer,
     );
   }
 

@@ -192,21 +192,26 @@ final sanctum = SanctumAuth(
 ### 🔧 Custom Configuration
 
 ```dart
-final sanctum = SanctumAuth.withConfig(
-  SanctumConfig(
-    baseUrl: 'https://api.yourapp.com',
-    authMode: SanctumAuthMode.hybrid,
-    debugMode: true, // Enable detailed logging
-    autoRefreshTokens: true,
-    defaultHeaders: {
-      'X-Custom-Header': 'value',
-    },
-    endpoints: SanctumEndpoints(
-      login: '/api/auth/login',
-      register: '/api/auth/register',
-      logout: '/api/auth/logout',
-    ),
+final sanctum = SanctumAuth(
+  baseUrl: 'https://api.yourapp.com',
+  authMode: SanctumAuthMode.hybrid,
+  debugMode: true, // Enable detailed logging
+  autoRefreshTokens: true,
+  defaultHeaders: {
+    'X-Custom-Header': 'value',
+  },
+  endpoints: SanctumEndpoints(
+    login: '/api/auth/login',
+    register: '/api/auth/register',
+    logout: '/api/auth/logout',
   ),
+  // Custom request transformers for non-standard APIs
+  loginRequestTransformer: (email, password, deviceName, abilities, remember) => {
+    'email': email,
+    'password': password,
+    'device': deviceName, // Custom field name
+    'permissions': abilities?.join(','), // Custom format
+  },
 );
 ```
 

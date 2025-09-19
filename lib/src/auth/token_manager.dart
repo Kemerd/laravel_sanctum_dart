@@ -124,7 +124,6 @@ class SanctumTokenManager {
 
       _logger.logTokenOperation(
         operation: 'LIST_SUCCESS',
-        additionalData: {'count': tokens.length},
       );
 
       return tokens;
@@ -172,7 +171,6 @@ class SanctumTokenManager {
     try {
       _logger.logTokenOperation(
         operation: 'REVOKE_MULTIPLE_REQUEST',
-        additionalData: {'token_ids': tokenIds, 'count': tokenIds.length},
       );
 
       await _dio.post(
@@ -182,12 +180,10 @@ class SanctumTokenManager {
 
       _logger.logTokenOperation(
         operation: 'REVOKE_MULTIPLE_SUCCESS',
-        additionalData: {'count': tokenIds.length},
       );
     } on DioException catch (e) {
       _logger.logTokenOperation(
         operation: 'REVOKE_MULTIPLE_FAILED',
-        additionalData: {'count': tokenIds.length},
       );
       throw _handleDioException(e);
     }

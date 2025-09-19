@@ -280,10 +280,10 @@ class SanctumAuthInterceptorWithRetry extends SanctumAuthInterceptor {
   final int maxRetryAttempts;
 
   /// Current retry attempt count per request
-  final Map<String, int> _retryAttempts = {};
+  final Map<String, int> _retryAttempts = <String, int>{};
 
   /// Creates a new [SanctumAuthInterceptorWithRetry] instance
-  const SanctumAuthInterceptorWithRetry({
+  SanctumAuthInterceptorWithRetry({
     required super.storage,
     required super.config,
     required super.logger,

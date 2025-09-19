@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:laravel_sanctum_dart/laravel_sanctum_dart.dart';
 
@@ -21,6 +22,12 @@ import '../helpers/test_config.dart';
 ///   "device_name": "string"
 /// }
 void main() {
+  // Initialize Flutter bindings for tests but allow real HTTP
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  // Override HTTP client to allow real network requests
+  HttpOverrides.global = null;
+
   group('Laravel Sanctum Auth Login Integration Tests', () {
     late SanctumAuth sanctumAuth;
 
@@ -147,7 +154,7 @@ void main() {
         expect(
           () async => await sanctumAuth.login(
             email: 'nonexistent@example.com',
-            password: TestConfig.testCustomerPassword,
+            password: TestConfig.testUserPassword,
             deviceName: 'Test Device',
           ),
           throwsA(isA<SanctumAuthenticationException>()),
@@ -276,7 +283,7 @@ void main() {
         // If we got here without rate limiting, that's also acceptable
         // The test mainly ensures rate limiting is handled properly when it occurs
         expect(results, isA<List>());
-      }, timeout: const Duration(seconds: 60));
+      }, timeout: const Timeout(Duration(seconds: 60)));
     });
 
     group('Token Management Tests', () {
@@ -323,8 +330,8 @@ void main() {
       test('should handle multiple sequential logins correctly', () async {
         // First login
         final firstLogin = await sanctumAuth.login(
-          email: TestConfig.testCustomerEmail,
-          password: TestConfig.testCustomerPassword,
+          email: TestConfig.testUserEmail,
+          password: TestConfig.testUserPassword,
           deviceName: 'First Login Device',
         );
 
@@ -337,8 +344,8 @@ void main() {
 
         // Second login with different account
         final secondLogin = await sanctumAuth.login(
-          email: TestConfig.testDriverEmail,
-          password: TestConfig.testDriverPassword,
+          email: TestConfig.testUser2Email,
+          password: TestConfig.testUser2Password,
           deviceName: 'Second Login Device',
         );
 
@@ -347,7 +354,7 @@ void main() {
 
         // Tokens should be different
         expect(firstToken, isNot(equals(secondToken)));
-        expect(secondLogin.user.email, equals(TestConfig.testDriverEmail));
+        expect(secondLogin.user.email, equals(TestConfig.testUser2Email));
       }, timeout: Timeout(TestConfig.testTimeout));
     });
   });

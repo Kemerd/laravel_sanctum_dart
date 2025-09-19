@@ -4,7 +4,7 @@ version: 1.0.0
 homepage: https://github.com/Kemerd/laravel_sanctum_dart
 repository: https://github.com/Kemerd/laravel_sanctum_dart
 issue_tracker: https://github.com/Kemerd/laravel_sanctum_dart/issues
-documentation: https://pub.dev/packages/laravel_sanctum_dart
+documentation: https://pub.dev/documentation/laravel_sanctum_dart/latest/
 
 environment:
   sdk: '>=3.8.0 <4.0.0'

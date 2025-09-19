@@ -28,10 +28,10 @@ class SanctumRetryInterceptor extends Interceptor {
   final Random _random = Random();
 
   /// Map to track retry attempts per request
-  final Map<String, int> _retryAttempts = {};
+  final Map<String, int> _retryAttempts = <String, int>{};
 
   /// Creates a new [SanctumRetryInterceptor] instance
-  const SanctumRetryInterceptor({
+  SanctumRetryInterceptor({
     required SanctumRetryConfig config,
     required SanctumLogger logger,
   })  : _config = config,

@@ -106,5 +106,8 @@ class TestConfig {
   }
 
   /// Get timeout duration for tests
-  static Duration get testTimeout => Duration(milliseconds: testTimeoutMs);
+  static Duration get testTimeout {
+    initialize(); // Ensure initialization
+    return Duration(milliseconds: testTimeoutMs);
+  }
 }
